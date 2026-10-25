@@ -1,0 +1,10 @@
+@model LaboratorioCRUDAlumnos.Models.AlumnoModel
+@{ ViewBag.Title = "Confirmar eliminación"; }
+<a class="back-link" href="@Url.Action("Index")">← Volver al directorio</a>
+<section class="delete-layout"><div class="delete-art" aria-hidden="true"><span>×</span><i>↗</i></div><div class="delete-content"><p class="eyebrow">ANTES DE CONTINUAR</p><h1>¿Eliminar este<br />registro<span class="orange">?</span></h1><p class="delete-description">El alumno se quitará del directorio de esta sesión.<br />Esta acción no se puede deshacer.</p><div class="delete-person"><span class="student-avatar color-@(Model.Id % 4)">@Model.Nombres[0]@Model.Apellidos[0]</span><div><strong>@Model.Nombres @Model.Apellidos</strong><small>#@Model.Id.ToString("D3") · @Model.Edad años · @Model.Correo</small></div></div>
+@using (Html.BeginForm("Delete", "Alumno", new { id = Model.Id }, FormMethod.Post, new { @class = "delete-form" }))
+{
+    @Html.AntiForgeryToken()
+    <a class="button button-light" href="@Url.Action("Index")">Conservar alumno</a><button class="button button-danger" type="submit">Sí, eliminar registro ×</button>
+}
+</div></section>

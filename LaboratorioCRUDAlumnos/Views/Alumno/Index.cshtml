@@ -1,0 +1,27 @@
+@model IEnumerable<LaboratorioCRUDAlumnos.Models.AlumnoModel>
+@using System.Linq
+@{ ViewBag.Title = "Directorio de alumnos"; }
+<section class="hero">
+    <div class="hero-copy"><p class="eyebrow"><span></span> TU COMUNIDAD, MÁS CERCA</p><h1>El futuro tiene<br />nombre y apellido<span class="orange">.</span></h1><p class="hero-description">Un espacio para conocer a tus alumnos,<br class="desktop-break" /> cuidar sus datos y acompañar su camino.</p><a class="button button-dark" href="@Url.Action("Create")"><span aria-hidden="true">＋</span> Registrar un alumno <span aria-hidden="true">↗</span></a></div>
+    <div class="hero-art" aria-hidden="true"><div class="art-orbit"></div><div class="art-grid"></div><span class="art-star">✳</span><span class="art-note">APRENDER.<br />CRECER.<br /><em>Conectar.</em></span><div class="art-students"><span>AG</span><span>CR</span><span>LF</span><i>＋</i></div><span class="art-caption">CADA HISTORIA CUENTA</span></div>
+</section>
+<section class="overview" aria-label="Resumen del directorio"><div class="overview-intro"><span class="eyebrow">UNA MIRADA A TU COMUNIDAD</span><h2>Pequeños datos.<br />Grandes historias.</h2></div><div class="metric"><span class="metric-icon" aria-hidden="true">▦</span><div><strong>@ViewBag.Total.ToString("D2")</strong><span>Alumnos registrados</span></div></div><div class="metric"><span class="metric-icon" aria-hidden="true">↗</span><div><strong>@ViewBag.Mayores.ToString("D2")</strong><span>Mayores de edad</span></div></div><div class="metric"><span class="metric-icon" aria-hidden="true">◷</span><div><strong>@String.Format("{0:0.#}", ViewBag.Promedio)<small>años</small></strong><span>Edad promedio</span></div></div></section>
+<section class="directory" aria-labelledby="directory-title">
+    <div class="directory-heading"><div><p class="eyebrow">CONECTA CON CADA HISTORIA</p><h2 id="directory-title">Directorio de alumnos <span class="count">@Model.Count()</span></h2></div><form method="get" action="@Url.Action("Index")" class="search" role="search"><label class="sr-only" for="buscar">Buscar por nombre o correo</label><span aria-hidden="true">⌕</span><input type="search" id="buscar" name="buscar" value="@ViewBag.Buscar" placeholder="Busca un nombre o un correo" /><button type="submit" aria-label="Buscar alumnos">→</button></form></div>
+    @if (!String.IsNullOrWhiteSpace((string)ViewBag.Buscar))
+    {
+        <div class="search-status">Resultados para <strong>“@ViewBag.Buscar”</strong> <a href="@Url.Action("Index")">Mostrar todos ×</a></div>
+    }
+    <div class="table-scroll"><table><caption class="sr-only">Listado de alumnos de la sesión actual</caption><thead><tr><th scope="col">CÓDIGO</th><th scope="col">ALUMNO</th><th scope="col">CORREO ELECTRÓNICO</th><th scope="col">EDAD</th><th scope="col" class="actions-column">GESTIONAR</th></tr></thead><tbody>
+    @foreach (var alumno in Model)
+    {
+        <tr><td><span class="student-id">#@alumno.Id.ToString("D3")</span></td><td><a class="student" href="@Url.Action("Details", new { id = alumno.Id })"><span class="student-avatar color-@(alumno.Id % 4)" aria-hidden="true">@alumno.Nombres[0]@alumno.Apellidos[0]</span><span><strong>@alumno.Nombres</strong><small>@alumno.Apellidos</small></span></a></td><td><a class="email" href="mailto:@alumno.Correo">@alumno.Correo</a></td><td><span class="age">@alumno.Edad <small>años</small></span></td><td><div class="row-actions"><a href="@Url.Action("Details", new { id = alumno.Id })" aria-label="Ver detalles de @alumno.Nombres" title="Ver detalles">↗</a><a href="@Url.Action("Edit", new { id = alumno.Id })" aria-label="Editar a @alumno.Nombres" title="Editar alumno">✎</a><a class="remove" href="@Url.Action("Delete", new { id = alumno.Id })" aria-label="Eliminar a @alumno.Nombres" title="Eliminar alumno">×</a></div></td></tr>
+    }
+    </tbody></table></div>
+    @if (!Model.Any())
+    {
+        <div class="empty"><span aria-hidden="true">⌕</span><h3>No hay alumnos para mostrar</h3><p>Prueba otra búsqueda o registra un nuevo alumno.</p><a class="text-link" href="@Url.Action("Create")">Registrar alumno ↗</a></div>
+    }
+    <div class="table-bottom"><span>@Model.Count() de @ViewBag.Total alumnos</span><span><i class="online-dot"></i> Un directorio que crece contigo</span></div>
+</section>
+<div class="session-note"><span aria-hidden="true">ⓘ</span><p>Tus cambios se conservan mientras tu sesión permanezca activa.</p></div>

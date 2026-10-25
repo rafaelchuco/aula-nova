@@ -1,3 +1,0 @@
-@model AlumnoModel
-@{ ViewData["Title"] = "Eliminar alumno"; }
-<a class="back-link" asp-action="Index">← Volver al directorio</a><section class="delete-card"><span class="delete-icon" aria-hidden="true">×</span><p class="eyebrow">ELIMINAR REGISTRO</p><h1>¿Eliminar a este alumno?</h1><p>Se eliminará el registro de <strong>@Model.Nombres @Model.Apellidos</strong> (@Model.Documento). Esta acción no se puede deshacer.</p><form asp-action="Delete" asp-route-id="@Model.Id" method="post"><a class="button secondary" asp-action="Index">Conservar alumno</a><button class="button danger" type="submit">Sí, eliminar registro</button></form></section>

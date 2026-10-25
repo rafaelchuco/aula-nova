@@ -1,0 +1,16 @@
+@model LaboratorioCRUDAlumnos.Models.AlumnoModel
+@{ ViewBag.Title = "Editar Alumno"; }
+<a class="back-link" href="@Url.Action("Index")">← Volver al directorio</a>
+<section class="editor-layout">
+    <aside class="editor-intro"><p class="eyebrow">EDITAR ALUMNO</p><h1>Cada detalle cuenta.<span class="orange">↗</span></h1><p>Mantén su información siempre al día.</p><div class="editor-illustration" aria-hidden="true"><span class="editor-star">✳</span><span class="editor-square"></span><span class="editor-circle"></span></div><div class="help-note"><span>01 — PERSONAS PRIMERO</span><p>Un registro claro es el primer paso para acompañar a cada alumno.</p></div></aside>
+    <div class="editor-card"><div class="card-heading"><span class="section-number">01</span><div><h2>Datos del alumno</h2><p>Completa los cuatro campos para continuar.</p></div></div>
+    @using (Html.BeginForm("Edit", "Alumno", new { id = Model.Id }, FormMethod.Post, new { @class = "student-form" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="record-id">Identificador del alumno <strong>#@Model.Id.ToString("D3")</strong></div>
+        @Html.Partial("_Form", Model)
+        <p class="form-caption">Estás actualizando un registro existente.</p>
+        <div class="form-actions"><a class="button button-light" href="@Url.Action("Index")">Cancelar</a><button class="button button-blue" type="submit">Guardar cambios <span aria-hidden="true">↗</span></button></div>
+    }
+    </div>
+</section>

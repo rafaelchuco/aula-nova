@@ -1,0 +1,10 @@
+@model LaboratorioCRUDAlumnos.Models.AlumnoModel
+@Html.ValidationSummary(false, "Revisa los datos antes de continuar.", new { @class = "validation", role = "alert" })
+<div class="field-row">
+    <div class="field">@Html.LabelFor(m => m.Nombres)<span class="required-note">Obligatorio</span>@Html.TextBoxFor(m => m.Nombres, new { @class = "input", autocomplete = "given-name", maxlength = "60", required = "required", placeholder = "Ej. Ana María" })@Html.ValidationMessageFor(m => m.Nombres)</div>
+    <div class="field">@Html.LabelFor(m => m.Apellidos)<span class="required-note">Obligatorio</span>@Html.TextBoxFor(m => m.Apellidos, new { @class = "input", autocomplete = "family-name", maxlength = "60", required = "required", placeholder = "Ej. García López" })@Html.ValidationMessageFor(m => m.Apellidos)</div>
+</div>
+<div class="field-row contact-row">
+    <div class="field">@Html.LabelFor(m => m.Correo)<span class="required-note">Obligatorio</span>@Html.TextBoxFor(m => m.Correo, new { @class = "input", type = "email", autocomplete = "email", maxlength = "120", required = "required", placeholder = "nombre@ejemplo.com" })@Html.ValidationMessageFor(m => m.Correo)</div>
+    <div class="field">@Html.LabelFor(m => m.Edad)<span class="required-note">En años</span>@Html.TextBoxFor(m => m.Edad, new { @class = "input", type = "number", min = "1", max = "120", required = "required", inputmode = "numeric" })@Html.ValidationMessageFor(m => m.Edad)</div>
+</div>

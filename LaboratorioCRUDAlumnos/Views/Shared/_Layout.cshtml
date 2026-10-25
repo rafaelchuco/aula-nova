@@ -1,0 +1,36 @@
+@{
+    var accion = (string)ViewContext.RouteData.Values["action"];
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#182946" />
+    <title>@ViewBag.Title | Aula Nova</title>
+    <link rel="icon" type="image/svg+xml" href="@Url.Content("~/Content/favicon.svg")" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/Site.css")" />
+</head>
+<body>
+    <a href="#contenido" class="skip-link">Saltar al contenido</a>
+    <header class="header">
+        <div class="header-inner">
+            <a href="@Url.Action("Index", "Alumno")" class="brand" aria-label="Aula Nova, inicio"><span class="brand-symbol" aria-hidden="true">a<span>n</span></span><span>Aula Nova<small>PERSONAS QUE APRENDEN</small></span></a>
+            <nav aria-label="Navegación principal">
+                <a class="nav-link @(accion == "Index" ? "selected" : "")" href="@Url.Action("Index", "Alumno")">Directorio</a>
+                <a class="nav-link @(accion == "Create" ? "selected" : "")" href="@Url.Action("Create", "Alumno")">Registrar alumno <span aria-hidden="true">↗</span></a>
+            </nav>
+            <div class="header-end"><span class="online-dot"></span> Espacio académico <span class="account-avatar" aria-hidden="true">AN</span></div>
+        </div>
+    </header>
+    <main id="contenido" class="container">
+        @if (TempData["Mensaje"] != null)
+        {
+            <div class="notice" role="status"><span aria-hidden="true">✓</span> @TempData["Mensaje"]</div>
+        }
+        @RenderBody()
+    </main>
+    <footer class="footer container"><a class="footer-brand" href="@Url.Action("Index", "Alumno")">Aula Nova<span>®</span></a><span>Cada alumno es un nuevo comienzo.</span><span class="footer-year">COMUNIDAD ACADÉMICA</span></footer>
+    <script src="@Url.Content("~/Scripts/site.js")" defer></script>
+</body>
+</html>

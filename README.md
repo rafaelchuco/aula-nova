@@ -1,67 +1,61 @@
-# Aula Nova
+# Aula Nova — Laboratorio CRUD de alumnos
 
-Sistema de gestión de alumnos en español: ASP.NET Core MVC (.NET 10) y SQLite. Diseño adaptable con directorio, indicadores, búsqueda, filtros y fichas académicas.
+**Semana 09 · Sección B · ASP.NET MVC 5 sobre .NET Framework 4.7.2 · C# · Sesiones**
 
-## Ejecutar
+Aplicación para el laboratorio con un diseño renovado: navegación superior, portada azul, ilustraciones en CSS, resumen del directorio, listado reordenado, búsqueda, ficha de alumno y formularios adaptables.
 
-Requiere el SDK de .NET 10. Desde la raíz del proyecto:
+## Abrir en Visual Studio (Windows)
 
-```sh
-dotnet restore demo10/demo10.csproj
-dotnet run --project demo10/demo10.csproj
-```
+1. En Visual Studio Installer, habilita **ASP.NET and web development**, **.NET Framework project and item templates** y las herramientas de desarrollo de **.NET Framework 4.7.2**.
+2. Extrae el ZIP completo en una carpeta local. Abre `LaboratorioCRUDAlumnos.sln`.
+3. Haz clic derecho en la solución y selecciona **Restaurar paquetes NuGet**. La restauración utiliza `packages.config` y descarga cuatro dependencias MVC/WebPages.
+4. Si fuese necesario, establece `LaboratorioCRUDAlumnos` como proyecto de inicio.
+5. Compila la solución y pulsa **Ctrl+F5** con **IIS Express**. La URL configurada es `http://localhost:51109/`.
+6. Aparecerán tres alumnos de ejemplo. Registra, consulta, edita y elimina desde el directorio.
 
-Abre http://localhost:5088. La base de datos se crea automáticamente en `demo10/App_Data/aula-nova.db`. Los datos persisten al cerrar el navegador y reiniciar el servidor. El sistema inicia vacío.
+Si falta el targeting pack 4.7.2, instálalo desde Visual Studio Installer. No cambies el proyecto a ASP.NET Core.
 
-Para cargar seis alumnos ficticios de demostración, con la aplicación iniciada al menos una vez y el comando `sqlite3` instalado:
+## Cumplimiento de la consigna
 
-```sh
-sqlite3 demo10/App_Data/aula-nova.db < demo10/Database/seed.sql
-```
+| Requisito | Implementación |
+| --- | --- |
+| MVC sobre .NET Framework | Proyecto clásico de Visual Studio, MVC 5.2.9, .NET Framework 4.7.2 |
+| Sin autenticación | `authentication mode="None"`; IIS Express con autenticación anónima |
+| Cinco campos exactos | `Id` int, `Nombres` string, `Apellidos` string, `Edad` int, `Correo` string |
+| Estructura MVC | `Models/AlumnoModel.cs`, `Controllers/AlumnoController.cs`, `Views/Alumno` |
+| CRUD completo | `Index`, `Details`, `Create`, `Edit` y `Delete` |
+| GET / POST | GET muestra pantallas; POST crea, actualiza y elimina |
+| Confirmación para eliminar | GET Delete presenta al alumno; solo POST realiza la eliminación |
+| Persistencia temporal | La colección `List<AlumnoModel>` vive en `Session["alumnos"]` |
+| Inicialización | Se cargan tres ejemplos solo si `Session["alumnos"] == null` |
+| Restricciones | Sin base de datos, EF, archivos de alumnos ni listas estáticas |
+| Entrega | Solución, código, guía de pruebas y evidencia del uso de sesiones |
 
-## Funciones y campos
+## Datos y validación
 
-- Crear, consultar, editar y eliminar alumnos con confirmación.
-- Nombres, apellidos, documento, correo, teléfono, carrera, ciclo, estado y observaciones.
-- Documento de 8 a 12 dígitos y correo únicos; ciclos del 1 al 12.
-- Estados Activo, Egresado e Inactivo. Catálogo de cinco carreras.
-- Búsqueda por nombre, documento o correo; filtros combinables por carrera y estado.
-- Indicadores globales de alumnos, activos, egresados y carreras con alumnos.
-- Validación en servidor, consultas parametrizadas y tokens antifalsificación en las operaciones que modifican datos.
+El identificador se asigna automáticamente y se conserva al editar. Nombres y apellidos son obligatorios, hasta 60 caracteres; edad entre 1 y 120; correo obligatorio y con formato válido, hasta 120 caracteres. La validación principal se ejecuta en el servidor. HTML añade ayuda de validación al completar los formularios.
 
-## Base de datos
+La búsqueda filtra la vista, sin reemplazar la colección guardada en sesión. Las tarjetas solo calculan valores a partir de los cinco campos existentes: total, mayores de edad y edad promedio.
 
-El esquema versionado está en `demo10/Database/001_initial.sql`. `seed.sql` es opcional y usa exclusivamente datos ficticios. Los archivos de datos locales se excluyen de GitHub. La carpeta de datos debe tener permisos de escritura.
+## Cómo funciona la sesión
 
-Puedes cambiar la ruta con la variable `Database__Path` o la configuración `Database:Path` de `appsettings.json`. Usa una ruta persistente para que un despliegue no borre la base de datos. Para hacer una copia de seguridad consistente con la aplicación en ejecución:
+El controlador inicializa y recupera la lista en `ObtenerAlumnos()`. Crear, editar y eliminar vuelven a asignar la lista a `Session["alumnos"]`. La configuración es **InProc**, con 20 minutos de inactividad y cookie de sesión.
 
-```sh
-sqlite3 demo10/App_Data/aula-nova.db ".backup '/ruta/segura/aula-nova-backup.db'"
-```
+Actualizar el navegador conserva los cambios mientras la sesión siga vigente. Un navegador independiente tiene otra sesión y recibe sus propios ejemplos. Al expirar la sesión o reiniciar IIS Express se pierde el almacenamiento temporal. Borrar todos los alumnos mantiene la lista vacía; los ejemplos no se vuelven a insertar hasta iniciar otra sesión.
 
-## Verificar
+Consulta `docs/SESIONES.md` para la evidencia del código y `docs/PRUEBAS-Y-CAPTURAS.md` para completar las pruebas y capturas solicitadas.
 
-```sh
-dotnet build demo10/demo10.csproj -c Release
-python3 tests/smoke.py
-```
+## Verificación
 
-La prueba usa una base de datos temporal independiente y comprueba el CRUD por HTTP, persistencia tras reiniciar, duplicados, validación, filtros, CSRF, codificación HTML y respuestas 404. GitHub Actions ejecuta estas verificaciones en cada cambio.
+- El proyecto C# se puede compilar con referencias de .NET Framework sin ejecutar ASP.NET.
+- La ejecución web y la compilación de vistas con IIS Express requieren Windows / .NET Framework; el SDK de .NET moderno en macOS no sustituye ese entorno.
+- Auditoría documental opcional, con Python 3: `python tools/validar_estructura.py`.
+- Prueba HTTP opcional, después de iniciar el proyecto en Windows: `python tools/probar_crud.py http://localhost:51109`.
 
-## Publicar la aplicación
+Las capturas de una vista previa del diseño, si se incluyen, son únicamente material visual. No acreditan el funcionamiento de las sesiones ni reemplazan capturas reales del laboratorio en IIS Express.
 
-```sh
-dotnet publish demo10/demo10.csproj -c Release -o publish
-cd publish
-ASPNETCORE_URLS=http://127.0.0.1:5088 dotnet AulaNova.dll
-```
+## Cambios respecto a la versión anterior
 
-El esquema SQL se incluye en la publicación. Para un dominio distinto de localhost, configura `AllowedHosts` con el dominio real y usa HTTPS mediante el servidor de alojamiento. Esta versión es un CRUD local de demostración sin autenticación: antes de usar datos reales en un servidor accesible públicamente, añade acceso de usuarios y autorización.
+Esta versión ajusta el proyecto al laboratorio entregado: se retiraron ASP.NET Core, SQLite y los campos adicionales. Se recuperaron ASP.NET MVC / .NET Framework, el campo Edad y las sesiones. El diseño se renovó conservando todas las operaciones solicitadas.
 
-## Origen y cambios
-
-Adaptado del proyecto [CrudAumnos](https://github.com/betuelarones-arch/CrudAumnos), revisión `89a77919a1ccf74c3eed83c3871561aa2cfc32be`. Se eliminó el `.git` del clon y se preparó un proyecto independiente con historial nuevo. Se conserva la referencia de origen.
-
-Se migró ASP.NET MVC 5 / .NET Framework 4.7.2 a ASP.NET Core MVC / .NET 10 para ejecutarlo en Windows, macOS y Linux. El almacenamiento temporal en sesión fue reemplazado por una base de datos SQLite. Se sustituyó el campo edad por un perfil académico más completo y se renovaron las vistas, estilos, navegación y formularios.
-
-Referencia técnica del proveedor: [Microsoft.Data.Sqlite](https://learn.microsoft.com/en-us/dotnet/standard/data/sqlite/).
+Base original: [CrudAumnos](https://github.com/betuelarones-arch/CrudAumnos), revisión `89a77919a1ccf74c3eed83c3871561aa2cfc32be`. La copia local no contiene `.git`. La actualización de GitHub conserva el historial del repositorio independiente Aula Nova.
