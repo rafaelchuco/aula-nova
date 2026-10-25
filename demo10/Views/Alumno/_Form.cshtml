@@ -1,0 +1,14 @@
+@model AlumnoModel
+<div asp-validation-summary="All" class="validation-summary" role="alert"></div>
+<section class="form-section"><div class="form-section-title"><span>01</span><div><h2>Información personal</h2><p>Los datos que identifican a tu alumno.</p></div></div><div class="form-grid">
+<div class="field"><label asp-for="Nombres"></label><input asp-for="Nombres" autocomplete="given-name" maxlength="60" required placeholder="Ej. Valentina" /><span asp-validation-for="Nombres"></span></div>
+<div class="field"><label asp-for="Apellidos"></label><input asp-for="Apellidos" autocomplete="family-name" maxlength="60" required placeholder="Ej. Ríos Mendoza" /><span asp-validation-for="Apellidos"></span></div>
+<div class="field"><label asp-for="Documento"></label><input asp-for="Documento" inputmode="numeric" pattern="[0-9]{8,12}" maxlength="12" required placeholder="Entre 8 y 12 dígitos" /><span asp-validation-for="Documento"></span></div>
+<div class="field"><label asp-for="Correo"></label><input asp-for="Correo" type="email" autocomplete="email" maxlength="120" required placeholder="nombre@ejemplo.com" /><span asp-validation-for="Correo"></span></div>
+<div class="field"><label asp-for="Telefono"></label><input asp-for="Telefono" type="tel" autocomplete="tel" maxlength="20" placeholder="Opcional" /><span asp-validation-for="Telefono"></span></div></div></section>
+<section class="form-section"><div class="form-section-title"><span>02</span><div><h2>Perfil académico</h2><p>Su camino dentro de la institución.</p></div></div><div class="form-grid">
+<div class="field"><label asp-for="Carrera"></label><select asp-for="Carrera">@foreach(var c in AlumnoModel.Carreras){<option value="@c">@c</option>}</select><span asp-validation-for="Carrera"></span></div>
+<div class="field"><label asp-for="Ciclo"></label><input asp-for="Ciclo" type="number" min="1" max="12" required /><span asp-validation-for="Ciclo"></span></div>
+<div class="field"><label asp-for="Estado"></label><select asp-for="Estado"><option>Activo</option><option>Egresado</option><option>Inactivo</option></select><span asp-validation-for="Estado"></span></div>
+<div class="field full"><label asp-for="Observaciones"></label><textarea asp-for="Observaciones" rows="3" maxlength="300" placeholder="Información adicional que quieras recordar (opcional)"></textarea><span asp-validation-for="Observaciones"></span></div></div></section>
+<div class="form-actions"><span>Teléfono y observaciones son opcionales.</span><a class="button secondary" asp-action="Index">Cancelar</a><button class="button primary" type="submit">Guardar alumno ↗</button></div>
